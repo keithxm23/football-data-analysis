@@ -7,7 +7,9 @@ Scrapes football-data.co.uk and downloads csv files for Premier League
 
 
 #Data fixes
-Removed 8bit chars from 
+Removed non-unicode, 8bit bytestrings  used as a leading space-character 
+in Referee names from 0405.csv since it caused issues with parsing the data
+Lines: 337 - 345
 
 Referee data fixes:
 | 0910   | 2009-11-07 | Wolves    | Arsenal   | St Bennett  => "S Bennett"
