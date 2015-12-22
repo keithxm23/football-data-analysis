@@ -16,7 +16,7 @@ class Match(Base):
     __tablename__ = "matches"
     
     id = Column(Integer, primary_key=True)
-    season = Column(String)
+    season = Column(Integer)
     div_ = Column(String)
     date_ = Column(Date)
     hometeam_ = Column(String)
@@ -70,13 +70,14 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
         # print header[:REL_COLS]
         # print header_keys
         
+        season = (2000+int(csv_file[0:2]))*10000 + (2000+int(csv_file[2:4]))
         for row in reader:
             # print row
             match_data = {header_keys[h]['key']: row[header_keys[h]['index']] 
                 for h in header_keys.keys()}
             match_data['date_'] = datetime.strptime(
                 row[header_keys['Date']['index']], '%d/%m/%y')
-            match_data['season'] = csv_file.strip(".csv")
+            match_data['season'] = season
             if csv_file=="1213.csv":
                 match_data['referee_'] = ''
             # print match_data
