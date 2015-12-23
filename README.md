@@ -24,6 +24,4 @@ Referee data fixes:
 | 0304   | 2003-08-23 | Southampton | Birmingham | Graham Barber => "G Barber"
 | 0304   | 2003-09-20 | Newcastle   | Bolton     | Graham Barber => "G Barber"
 
-
-TODO:
-Fix missing referee data from 1213 season
+Added missing referee data in 1213.csv

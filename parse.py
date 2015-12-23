@@ -64,8 +64,8 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
         header_keys = {h:{'index': idx, 'key': h.lower() + "_"} 
             for idx, h in enumerate(header[:REL_COLS])}
             
-        if csv_file=="1213.csv":
-            header_keys.pop("B365H")
+#        if csv_file=="1213.csv":
+#            header_keys.pop("B365H")
         
         # print header[:REL_COLS]
         # print header_keys
@@ -78,8 +78,8 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             match_data['date_'] = datetime.strptime(
                 row[header_keys['Date']['index']], '%d/%m/%y')
             match_data['season'] = season
-            if csv_file=="1213.csv":
-                match_data['referee_'] = ''
+#            if csv_file=="1213.csv":
+#                match_data['referee_'] = ''
             # print match_data
             match = Match(**match_data)
             # print match
