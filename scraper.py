@@ -3,7 +3,7 @@ import shutil
 
 BASE_URL = "http://www.football-data.co.uk/mmz4281/%s/E0.csv"
 START_SEASON = 2003
-END_SEASON = 2014 
+END_SEASON = 2015 
 
 def season_code(start):
     end = start + 1
