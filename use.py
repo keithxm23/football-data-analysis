@@ -45,6 +45,7 @@ def runsql(sql, colorize=None):
         x.add_row(row)
     #     # print r
     print(x)
+    return results
 
 
 FTR_COLOR_MAP ={
@@ -54,10 +55,14 @@ FTR_COLOR_MAP ={
         }
 
 
-runsql("select count(*) from matches")
-runsql("select hometeam_, awayteam_, ftr_ from matches where hometeam_='Arsenal' limit 10", 
+runsql("select count(*) from teams")
+runsql("select count(*) from referees")
+runsql("select count(*) from games")
+runsql("select count(*) from performances")
+runsql("select ht.name as home, at.name as away, ft_result from games g join teams ht on\
+        g.home_id = ht.id join teams at on g.away_id = at.id limit 10", 
         colorize=[
-            {'column':'ftr_', 
+            {'column':'ft_result', 
             'color_map':FTR_COLOR_MAP
             }
         ])
