@@ -16,6 +16,7 @@ in Referee names from 0405.csv since it caused issues with parsing the data
 Lines: 337 - 345
 
 Referee data fixes:
+```
  0910   | 2009-11-07 | Wolves    | Arsenal   | St Bennett  => "S Bennett"
  0910   | 2009-11-08 | Chelsea   | Man United | Mn Atkinson => "M Atkinson"
  0910   | 2009-11-28 | Wigan     | Sunderland | Mn Atkinson => "M Atkinson"
@@ -23,9 +24,12 @@ Referee data fixes:
  0607   | 2007-05-05 | Reading   | Watford   | D Gallaghe => "D Gallagher"
  0304   | 2003-08-23 | Southampton | Birmingham | Graham Barber => "G Barber"
  0304   | 2003-09-20 | Newcastle   | Bolton     | Graham Barber => "G Barber"
+```
 
 Added missing referee data in 1213.csv
 
+#Schema:
+```
 CREATE TABLE referees (
     id INTEGER NOT NULL,
     name VARCHAR,
@@ -67,3 +71,4 @@ CREATE TABLE games (
     FOREIGN KEY(away_id) REFERENCES performances (id),
     FOREIGN KEY(referee_id) REFERENCES referees (id)
     );
+```
