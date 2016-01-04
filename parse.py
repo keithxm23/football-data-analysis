@@ -2,14 +2,11 @@ import csv
 import os
 import sqlalchemy
 from datetime import datetime
-from sets import Set
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
 
 HOME_RESULT_MAP = {'H':'W','D':'D','A':'L'}
 AWAY_RESULT_MAP = {'A':'W','D':'D','H':'L'}
-seen_teams = Set()
-seen_refs = Set()
 
 # engine = create_engine('sqlite:///:memory:', echo=True)
 engine = create_engine('sqlite:///matchdb.db', echo=True)
@@ -35,6 +32,7 @@ class Performance(Base):
     __tablename__ = "performances"
     id = Column(Integer, primary_key=True)
     team_id = Column(Integer, ForeignKey('teams.id')) 
+    game_id = Column(Integer, ForeignKey('games.id')) 
     ft_goals = Column(Integer)
     ft_result = Column(String)
     ht_goals = Column(Integer)
@@ -158,7 +156,13 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 })
 
             session.add(game)
-            print home_p.team_id, away_p.team_id, game.season
+            session.flush()
+            session.refresh(game)
+
+            home_p.game_id = game.id
+            away_p.game_id = game.id
+
+            session.flush()
 
     #break #break after processing first csv file
 
