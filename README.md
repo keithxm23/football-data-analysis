@@ -44,6 +44,8 @@ CREATE TABLE performances (
     corners INTEGER,
     yellows INTEGER,
     reds INTEGER,
+    week INTEGER,
+    points INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY(team_id) REFERENCES teams (id),
     FOREIGN KEY(game_id) REFERENCES games (id)

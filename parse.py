@@ -7,6 +7,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
 
 HOME_RESULT_MAP = {'H':'W','D':'D','A':'L'}
 AWAY_RESULT_MAP = {'A':'W','D':'D','H':'L'}
+POINTS_MAP = {'W':3, 'D':1, 'L': 0}
 
 # engine = create_engine('sqlite:///:memory:', echo=True)
 engine = create_engine('sqlite:///matchdb.db', echo=True)
@@ -43,6 +44,8 @@ class Performance(Base):
     corners = Column(Integer)
     yellows = Column(Integer)
     reds = Column(Integer)
+    week = Column(Integer)
+    points = Column(Integer)
     
 class Team(Base):
     __tablename__ = "teams"
@@ -100,6 +103,8 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             
         season = (2000+int(csv_file[0:2]))*10000 + (2000+int(csv_file[2:4]))
 
+        season_data = {}
+
         for row in reader:
             # print row
             match_data = {header_keys[h]['key']: row[header_keys[h]['index']] 
@@ -108,6 +113,21 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             home_team_id = process_team(match_data['hometeam_'], session)
             away_team_id = process_team(match_data['awayteam_'], session)
             referee_id = process_ref(match_data['referee_'], session)
+
+            season_data.setdefault(home_team_id, {})
+            season_data[home_team_id].setdefault('week', 0)
+            season_data[home_team_id].setdefault('points', 0)
+
+            season_data.setdefault(away_team_id, {})
+            season_data[away_team_id].setdefault('week', 0)
+            season_data[away_team_id].setdefault('points', 0)
+
+
+            season_data[home_team_id]['week'] += 1
+            season_data[away_team_id]['week'] += 1
+
+            season_data[home_team_id]['points'] += POINTS_MAP[HOME_RESULT_MAP[match_data['ftr_']]]
+            season_data[away_team_id]['points'] += POINTS_MAP[AWAY_RESULT_MAP[match_data['ftr_']]]
 
             home_p = Performance(**{
                 'team_id': home_team_id,
@@ -121,6 +141,8 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'reds': match_data['hr_'],
                 'ft_result': HOME_RESULT_MAP[match_data['ftr_']],
                 'ht_result': HOME_RESULT_MAP[match_data['htr_']],
+                'week': season_data[home_team_id]['week'],
+                'points': season_data[home_team_id]['points'],
                 })
 
             away_p = Performance(**{
@@ -135,6 +157,8 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'reds': match_data['ar_'],
                 'ft_result': AWAY_RESULT_MAP[match_data['ftr_']],
                 'ht_result': AWAY_RESULT_MAP[match_data['htr_']],
+                'week': season_data[away_team_id]['week'],
+                'points': season_data[away_team_id]['points'],
                 })
 
             session.add(home_p)
