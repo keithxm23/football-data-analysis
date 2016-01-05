@@ -3,7 +3,7 @@ import os
 import sqlalchemy
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Date, ForeignKey, Float
 
 HOME_RESULT_MAP = {'H':'W','D':'D','A':'L'}
 AWAY_RESULT_MAP = {'A':'W','D':'D','H':'L'}
@@ -24,6 +24,9 @@ class Game(Base):
     referee_id = Column(Integer, ForeignKey('referees.id')) 
     ft_result = Column(String)
     ht_result = Column(String)
+    home_odds = Column(Float)
+    draw_odds = Column(Float)
+    away_odds = Column(Float)
 
     def __repr__(self):
         return "<Game(home_id='%s', away_id='%s')>" % (
@@ -89,7 +92,7 @@ Session = sessionmaker(bind=engine)
 session = Session()    
 
 DATA_DIR = "data/"
-REL_COLS = 23 #Number of Relevant columns
+REL_COLS = 26 #Number of Relevant columns
 
 print os.getcwd()
 
@@ -177,6 +180,9 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'div': match_data['div_'],
                 'ft_result': match_data['ftr_'],
                 'ht_result': match_data['htr_'],
+                'home_odds': match_data['b365h_'],
+                'draw_odds': match_data['b365d_'],
+                'away_odds': match_data['b365a_'],
                 })
 
             session.add(game)
