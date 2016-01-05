@@ -38,6 +38,7 @@ CREATE TABLE performances (
     ft_result VARCHAR,
     ht_goals INTEGER,
     ht_result VARCHAR,
+    at VARCHAR,
     shots INTEGER,
     shots_ot INTEGER,
     fouls INTEGER,

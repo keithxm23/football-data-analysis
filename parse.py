@@ -41,6 +41,7 @@ class Performance(Base):
     ft_result = Column(String)
     ht_goals = Column(Integer)
     ht_result = Column(String)
+    at = Column(String)
     shots = Column(Integer)
     shots_ot = Column(Integer)
     fouls = Column(Integer)
@@ -144,6 +145,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'reds': match_data['hr_'],
                 'ft_result': HOME_RESULT_MAP[match_data['ftr_']],
                 'ht_result': HOME_RESULT_MAP[match_data['htr_']],
+                'at':'H',
                 'week': season_data[home_team_id]['week'],
                 'points': season_data[home_team_id]['points'],
                 })
@@ -160,6 +162,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'reds': match_data['ar_'],
                 'ft_result': AWAY_RESULT_MAP[match_data['ftr_']],
                 'ht_result': AWAY_RESULT_MAP[match_data['htr_']],
+                'at':'A',
                 'week': season_data[away_team_id]['week'],
                 'points': season_data[away_team_id]['points'],
                 })
