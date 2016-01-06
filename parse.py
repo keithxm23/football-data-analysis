@@ -27,6 +27,7 @@ class Game(Base):
     home_odds = Column(Float)
     draw_odds = Column(Float)
     away_odds = Column(Float)
+    odds_result = Column(String)
 
     def __repr__(self):
         return "<Game(home_id='%s', away_id='%s')>" % (
@@ -173,6 +174,21 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             session.refresh(home_p)
             session.refresh(away_p)
 
+            ho_ = float(match_data['b365h_'])
+            do_ = float(match_data['b365d_'])
+            ao_ = float(match_data['b365a_'])
+            h_odds = 100.0/(1.0 + ho_/do_ + ho_/ao_)
+            d_odds = 100.0/(1.0 + do_/ao_ + do_/ho_)
+            a_odds = 100.0/(1.0 + ao_/do_ + ao_/ho_)
+
+            max_odds = max(h_odds, d_odds, a_odds)
+            if h_odds == max_odds:
+                odds_result = 'H'
+            elif d_odds == max_odds:
+                odds_result = 'D'
+            else:
+                odds_result = 'A'
+
             game = Game(**{
                 'season': season,
                 'date': datetime.strptime(
@@ -186,6 +202,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'home_odds': match_data['b365h_'],
                 'draw_odds': match_data['b365d_'],
                 'away_odds': match_data['b365a_'],
+                'odds_result' : odds_result,
                 })
 
             session.add(game)

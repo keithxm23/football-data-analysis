@@ -69,6 +69,7 @@ CREATE TABLE games (
     home_odds FLOAT,
     draw_odds FLOAT,
     away_odds FLOAT,
+    odds_result VARCHAR,
     PRIMARY KEY (id),
     FOREIGN KEY(home_id) REFERENCES performances (id),
     FOREIGN KEY(away_id) REFERENCES performances (id),
@@ -79,4 +80,41 @@ CREATE TABLE teams (
     name VARCHAR,
     PRIMARY KEY (id)
     );
+```
+
+#Sample Queries:
+```
+To get the table standings at a particular gameweek X in season Y:
+Let's say Gameweek 20 in the 20152016 season..
+
+select t.name, p.points
+from performances p
+join games g on p.game_id = g.id
+join teams t on t.id = p.team_id
+where g.season=20152016
+and p.week=20
+order by p.points desc
+;
+
+OUTPUT:
+Arsenal     42
+Leicester   40
+Man City    39
+Tottenham   36
+Man United  33
+West Ham    32
+Crystal Pa  31
+Liverpool   30
+Watford     29
+Stoke       29
+Everton     27
+West Brom   26
+Southampto  24
+Norwich     23
+Chelsea     23
+Bournemout  21
+Swansea     19
+Newcastle   17
+Sunderland  15
+Aston Vill  8
 ```
