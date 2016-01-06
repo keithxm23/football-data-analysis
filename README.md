@@ -38,6 +38,7 @@ CREATE TABLE performances (
     ft_result VARCHAR,
     ht_goals INTEGER,
     ht_result VARCHAR,
+    odds_result VARCHAR,
     at VARCHAR,
     shots INTEGER,
     shots_ot INTEGER,
@@ -50,12 +51,12 @@ CREATE TABLE performances (
     PRIMARY KEY (id),
     FOREIGN KEY(team_id) REFERENCES teams (id),
     FOREIGN KEY(game_id) REFERENCES games (id)
-    );
+  );
 CREATE TABLE referees (
     id INTEGER NOT NULL,
     name VARCHAR,
     PRIMARY KEY (id)
-    );
+  );
 CREATE TABLE games (
     id INTEGER NOT NULL,
     season INTEGER,
@@ -79,7 +80,7 @@ CREATE TABLE teams (
     id INTEGER NOT NULL,
     name VARCHAR,
     PRIMARY KEY (id)
-    );
+  );
 ```
 
 #Sample Queries:
@@ -87,14 +88,14 @@ CREATE TABLE teams (
 To get the table standings at a particular gameweek X in season Y:
 Let's say Gameweek 20 in the 20152016 season..
 
-select t.name, p.points
-from performances p
-join games g on p.game_id = g.id
-join teams t on t.id = p.team_id
-where g.season=20152016
-and p.week=20
-order by p.points desc
-;
+  select t.name, p.points
+  from performances p
+  join games g on p.game_id = g.id
+  join teams t on t.id = p.team_id
+  where g.season=20152016
+  and p.week=20
+  order by p.points desc
+  ;
 
 OUTPUT:
 Arsenal     42

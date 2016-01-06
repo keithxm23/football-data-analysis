@@ -42,6 +42,7 @@ class Performance(Base):
     ft_result = Column(String)
     ht_goals = Column(Integer)
     ht_result = Column(String)
+    odds_result = Column(String)
     at = Column(String)
     shots = Column(Integer)
     shots_ot = Column(Integer)
@@ -134,6 +135,21 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             season_data[home_team_id]['points'] += POINTS_MAP[HOME_RESULT_MAP[match_data['ftr_']]]
             season_data[away_team_id]['points'] += POINTS_MAP[AWAY_RESULT_MAP[match_data['ftr_']]]
 
+            ho_ = float(match_data['b365h_'])
+            do_ = float(match_data['b365d_'])
+            ao_ = float(match_data['b365a_'])
+            h_odds = 100.0/(1.0 + ho_/do_ + ho_/ao_)
+            d_odds = 100.0/(1.0 + do_/ao_ + do_/ho_)
+            a_odds = 100.0/(1.0 + ao_/do_ + ao_/ho_)
+
+            max_odds = max(h_odds, d_odds, a_odds)
+            if h_odds == max_odds:
+                odds_result = 'H'
+            elif d_odds == max_odds:
+                odds_result = 'D'
+            else:
+                odds_result = 'A'
+
             home_p = Performance(**{
                 'team_id': home_team_id,
                 'ft_goals': match_data['fthg_'],
@@ -145,6 +161,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'yellows': match_data['hy_'],
                 'reds': match_data['hr_'],
                 'ft_result': HOME_RESULT_MAP[match_data['ftr_']],
+                'odds_result': HOME_RESULT_MAP[odds_result],
                 'ht_result': HOME_RESULT_MAP[match_data['htr_']],
                 'at':'H',
                 'week': season_data[home_team_id]['week'],
@@ -162,6 +179,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'yellows': match_data['ay_'],
                 'reds': match_data['ar_'],
                 'ft_result': AWAY_RESULT_MAP[match_data['ftr_']],
+                'odds_result': AWAY_RESULT_MAP[odds_result],
                 'ht_result': AWAY_RESULT_MAP[match_data['htr_']],
                 'at':'A',
                 'week': season_data[away_team_id]['week'],
@@ -174,20 +192,6 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             session.refresh(home_p)
             session.refresh(away_p)
 
-            ho_ = float(match_data['b365h_'])
-            do_ = float(match_data['b365d_'])
-            ao_ = float(match_data['b365a_'])
-            h_odds = 100.0/(1.0 + ho_/do_ + ho_/ao_)
-            d_odds = 100.0/(1.0 + do_/ao_ + do_/ho_)
-            a_odds = 100.0/(1.0 + ao_/do_ + ao_/ho_)
-
-            max_odds = max(h_odds, d_odds, a_odds)
-            if h_odds == max_odds:
-                odds_result = 'H'
-            elif d_odds == max_odds:
-                odds_result = 'D'
-            else:
-                odds_result = 'A'
 
             game = Game(**{
                 'season': season,
