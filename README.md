@@ -1,7 +1,20 @@
-
+#How to
+You do not have to run the python scripts to start querying the database.
+I've included the sqlite3 database in this repo (the matchdb.db) file.
+All you need is sqlite3 installed on your computer and you can start querying the database.
+```
+$> sqlite3
+SQLite version 3.8.5 2014-08-15 22:37:57
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite> .open matchdb.db
+sqlite> select count(*) from teams;
+38
+```
 
 #scraper.py
-Scrapes football-data.co.uk and downloads csv files for Premier League 
+Scrapes football-data.co.uk and downloads csv files for Premier League
 
 #parse.py
 Parses the data files and creates a db. Uses SQLAlchemy, so you can choose
@@ -11,7 +24,7 @@ the sql database you wish to use.
 Before creating the db, you should fix the following datapoints if you are
 scraping the data yourself and not using the db or csv files in this repo
 
-Removed non-unicode, 8bit bytestrings  used as a leading space-character 
+Removed non-unicode, 8bit bytestrings  used as a leading space-character
 in Referee names from 0405.csv since it caused issues with parsing the data
 Lines: 337 - 345
 
