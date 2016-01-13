@@ -52,6 +52,7 @@ class Performance(Base):
     reds = Column(Integer)
     week = Column(Integer)
     points = Column(Integer)
+    gd = Column(Integer)
     
 class Team(Base):
     __tablename__ = "teams"
@@ -97,8 +98,6 @@ session = Session()
 DATA_DIR = "data/"
 REL_COLS = 26 #Number of Relevant columns
 
-print os.getcwd()
-
 for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
     print csv_file
     with open(DATA_DIR + csv_file, 'r') as f:
@@ -123,17 +122,21 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
             season_data.setdefault(home_team_id, {})
             season_data[home_team_id].setdefault('week', 0)
             season_data[home_team_id].setdefault('points', 0)
+            season_data[home_team_id].setdefault('gd', 0)
 
             season_data.setdefault(away_team_id, {})
             season_data[away_team_id].setdefault('week', 0)
             season_data[away_team_id].setdefault('points', 0)
-
+            season_data[away_team_id].setdefault('gd', 0)
 
             season_data[home_team_id]['week'] += 1
             season_data[away_team_id]['week'] += 1
 
             season_data[home_team_id]['points'] += POINTS_MAP[HOME_RESULT_MAP[match_data['ftr_']]]
             season_data[away_team_id]['points'] += POINTS_MAP[AWAY_RESULT_MAP[match_data['ftr_']]]
+            
+            season_data[home_team_id]['gd'] += int(match_data['fthg_']) - int(match_data['ftag_'])
+            season_data[away_team_id]['gd'] += int(match_data['ftag_']) - int(match_data['fthg_'])
 
             ho_ = float(match_data['b365h_'])
             do_ = float(match_data['b365d_'])
@@ -166,6 +169,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'at':'H',
                 'week': season_data[home_team_id]['week'],
                 'points': season_data[home_team_id]['points'],
+                'gd': season_data[home_team_id]['gd'],
                 })
 
             away_p = Performance(**{
@@ -184,6 +188,7 @@ for csv_file in os.listdir(os.getcwd() + "/" + DATA_DIR):
                 'at':'A',
                 'week': season_data[away_team_id]['week'],
                 'points': season_data[away_team_id]['points'],
+                'gd': season_data[away_team_id]['gd'],
                 })
 
             session.add(home_p)
