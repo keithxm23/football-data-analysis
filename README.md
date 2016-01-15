@@ -61,6 +61,7 @@ CREATE TABLE performances (
     reds INTEGER,
     week INTEGER,
     points INTEGER,
+    gd INTEGER,
     PRIMARY KEY (id),
     FOREIGN KEY(team_id) REFERENCES teams (id),
     FOREIGN KEY(game_id) REFERENCES games (id)
